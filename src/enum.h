@@ -1,3 +1,4 @@
+#pragma once
 
 #define MAGIC_ENUM_RANGE_MIN 0
 #define MAGIC_ENUM_RANGE_MAX 512

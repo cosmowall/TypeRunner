@@ -3,7 +3,7 @@ project(typescript)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "-Wno-unused-variable -Wno-switch -Wno-trigraphs")
+set(CMAKE_CXX_FLAGS "-Wno-error=enum-constexpr-conversion -Wno-unused-variable -Wno-switch -Wno-trigraphs")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math")

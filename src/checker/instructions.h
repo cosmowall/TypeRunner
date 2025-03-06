@@ -3,7 +3,7 @@
 #include "../enum.h"
 
 namespace tr::instructions {
-    enum OP {
+    enum OP: int {
         Noop,
         Jump, //arbitrary jump, used at the beginning to jump over storage-data (storage-data's addresses are constant)
         Halt,
