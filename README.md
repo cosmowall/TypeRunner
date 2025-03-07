@@ -196,4 +196,13 @@ $ make bench -j 8
 $ ./bench ../tests/objectLiterals1.ts
 ```
 
+Here are some general steps you might follow to build and run the typescript_debugger GUI:
+Navigate to the build directory:
+```sh
+cd build
+make typescript_debugger
+./typescript_debugger
+```
+
+
 Binaries are created in the build folder, which can now be executed.
