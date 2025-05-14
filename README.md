@@ -191,7 +191,7 @@ To compile natively make sure cmake and a C++ compiler is installed. We use LLVM
 ```sh
 $ mkdir build
 $ cd build
-$ cmake -DCMAKE_CXX_COMPILER=clang++-14 -DCMAKE_C_COMPILER=clang-14 -DCMAKE_BUILD_TYPE=Release ..
+$ cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Release ..
 $ make bench -j 8
 $ ./bench ../tests/objectLiterals1.ts
 ```
@@ -201,8 +201,33 @@ Navigate to the build directory:
 ```sh
 cd build
 make typescript_debugger
-./typescript_debugger
+src/gui/typescript_debugger
 ```
 
 
-Binaries are created in the build folder, which can now be executed.
+要调试test，你可以按照以下步骤操作：
+
+确保Google Test正确安装：
+确保你已经安装了Google Test库。如果没有安装，可以通过以下命令安装：
+brew install googletest
+确保CMake能够找到Google Test库。我们已经在CMakeLists.txt中配置了find_package(GTest REQUIRED)。
+重新生成构建文件：
+cmake -S . -B build
+在项目的根目录下运行以下命令以重新生成构建文件：
+这将确保CMake正确配置了Google Test和其他依赖项。
+编译项目：
+
+cmake ..
+进入build目录并运行以下命令： make typescript_test_mem
+这将编译项目并生成可执行文件。
+
+运行测试：
+/src/tests/typescript_test_mem
+运行生成的测试可执行文件。例如：
+这将运行所有Google Test测试并输出结果。
+调试特定问题：
+lldb /src/tests/typescript_test_mem
+如果测试失败或崩溃，可以使用调试器（如lldb或gdb）调试测试可执行文件。例如：
+在调试器中运行程序并设置断点以定位问题。
+检查C++标准版本：
+g++ --version

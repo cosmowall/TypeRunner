@@ -1,11 +1,11 @@
 #include <gtest/gtest.h>
-
+#include <string_view>
 #include "../hash.h"
 
 using namespace std;
 using namespace tr::hash;
 
-TEST(hash, hash) {
+TEST(hash, basic) {
     string_view sv = "foo188";
     string s = "foo188";
 

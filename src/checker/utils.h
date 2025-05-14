@@ -8,6 +8,7 @@
 namespace tr::vm {
     using std::vector;
     using std::string_view;
+    using std::string;
 
     inline uint64_t readUint64(const vector<unsigned char> &bin, unsigned int offset) {
         return *(uint64_t *) (bin.data() + offset);
@@ -25,8 +26,16 @@ namespace tr::vm {
         return *(uint32_t *) (bin.begin() + offset);
     }
 
+    inline int32_t readInt32(const vector<unsigned char> &bin, unsigned int offset) {
+        return *(int32_t *) (bin.data() + offset);
+    }
+
     inline int32_t readInt32(const string_view &bin, unsigned int offset) {
-        return *(int32_t *) (bin.begin() + offset);
+        return *(int32_t *) (bin.data() + offset);
+    }
+
+    inline int32_t readInt32(const string &bin, unsigned int offset) {
+        return *(int32_t *) (bin.data() + offset);
     }
 
     inline void writeUint32(vector<unsigned char> &bin, unsigned int offset, uint32_t value) {
@@ -57,9 +66,19 @@ namespace tr::vm {
         *(uint16_t *) (bin.data() + offset) = value;
     }
 
-    inline string_view readStorage(const string_view &bin, const uint32_t offset) {
+    inline string_view readStorage(const vector<unsigned char> &bin, const uint32_t offset) {
         const auto size = readUint16(bin, offset);
         return string_view(reinterpret_cast<const char *>(bin.data() + offset + 2), size);
+    }
+
+    inline string_view readStorage(const string_view &bin, const uint32_t offset) {
+        const auto size = readUint16(bin, offset);
+        return string_view(bin.data() + offset + 2, size);
+    }
+
+    inline string_view readStorage(const string &bin, const uint32_t offset) {
+        const auto size = readUint16(bin, offset);
+        return string_view(bin.data() + offset + 2, size);
     }
 
     using tr::instructions::OP;

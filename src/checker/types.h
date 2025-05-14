@@ -11,42 +11,16 @@
 #include <vector>
 #include <memory>
 #include <unordered_set>
+#include <optional>
+#include <string_view>
+#include <magic_enum.hpp>
+#include <version>
 
 namespace tr::checker {
-}
-
-namespace tr::vm {
     using std::string_view;
-    using std::array;
-    using std::to_string;
-    using std::make_shared;
-    using std::reference_wrapper;
-    using tr::utf::eatWhitespace;
-    using namespace tr::checker;
-
-    struct HashString {
-        uint64_t hash;
-//        uint64_t i;
-        string_view text;
-
-        HashString() { }
-
-        HashString(const string_view &text): text(text) {
-            hash = hash::runtime_hash(text);
-        }
-
-        string getString() {
-            return string(text);
-        }
-
-        bool operator ==(HashString &other) {
-            return getHash() == other.getHash();
-        }
-
-        uint64_t getHash() {
-            return hash;
-        }
-    };
+    using std::optional;
+    using std::shared_ptr;
+    using std::vector;
 
     enum class TypeKind: int {
         Never,
@@ -107,6 +81,49 @@ namespace tr::vm {
         unsigned int ip{};
 
         virtual ~Type() {
+        }
+    };
+
+    template<typename T> using node = shared_ptr<T>;
+    template<typename T> using optionalNode = optional<node<T>>;
+}
+
+namespace tr::vm {
+    using std::string_view;
+    using std::array;
+    using std::to_string;
+    using std::make_shared;
+    using std::reference_wrapper;
+    using tr::utf::eatWhitespace;
+    using tr::checker::node;
+    using tr::checker::optionalNode;
+    using tr::checker::Type;
+    using tr::checker::TypeKind;
+
+    inline uint64_t runtime_hash(const string_view &input) {
+        return tr::hash::xxh64::hash(input.data(), input.length(), 0);
+    }
+
+    struct HashString {
+        uint64_t hash;
+        string_view text;
+
+        HashString() { }
+
+        HashString(const string_view &text): text(text) {
+            hash = runtime_hash(text);
+        }
+
+        std::string getString() {
+            return std::string(text);
+        }
+
+        bool operator ==(HashString &other) {
+            return getHash() == other.getHash();
+        }
+
+        uint64_t getHash() {
+            return hash;
         }
     };
 
@@ -300,9 +317,8 @@ namespace tr::vm {
 
         bool includes(const node<Type> &type) {
             if (type->kind == TypeKind::Literal) {
-                return literalIndex.contains(to<TypeLiteral>(type)->literal.hash);
+                return literalIndex.find(to<TypeLiteral>(type)->literal.hash) != literalIndex.end();
             }
-
             return false;
         }
     };

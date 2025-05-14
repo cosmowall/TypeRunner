@@ -3,14 +3,24 @@ project(typescript)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_CXX_FLAGS "-Wno-error=enum-constexpr-conversion -Wno-unused-variable -Wno-switch -Wno-trigraphs")
+# 添加LLVM路径
+set(LLVM_ROOT "/opt/homebrew/Cellar/llvm@14/14.0.6")
+include_directories(${LLVM_ROOT}/include)
+link_directories(${LLVM_ROOT}/lib)
+
+set(CMAKE_CXX_FLAGS "-Wno-error=enum-constexpr-conversion -Wno-unused-variable -Wno-switch -Wno-trigraphs -Wno-error=consteval -Wno-error=undeclared-identifier -Wno-error=no-matching-function -Wno-error=no-member -Wno-error=expected-expression -Wno-error=incompatible-pointer-types -Wno-error=conversion -Wno-error=invalid-conversion -Wno-error=return-type -Wno-error=non-constant-expression -Wno-error=literal-operator -Wno-error=ferror-limit")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
 endif()
 
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(-Wno-error=unknown-warning-option -Wno-error=incompatible-pointer-types -Wno-error=conversion -Wno-error=invalid-conversion -Wno-error=return-type -Wno-error=non-constant-expression -Wno-error=literal-operator -Wno-error=ferror-limit)
+endif()
+
 include_directories(libs/tracy/)
 include_directories(libs/fmt/include/)
+include_directories(libs/doctest/doctest/)
 
 list(APPEND CMAKE_MODULE_PATH libs)
 

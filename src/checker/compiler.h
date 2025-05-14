@@ -7,6 +7,7 @@
 #include "./instructions.h"
 #include "./utils.h"
 #include "../node_test.h"
+#include "../hash.h"
 
 namespace tr::checker {
 

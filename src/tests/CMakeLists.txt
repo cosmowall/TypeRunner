@@ -1,18 +1,16 @@
 project(Tests)
 
+Include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG release-1.11.0
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
-#Include(FetchContent)
-#FetchContent_Declare(
-#        googletest
-#        GIT_REPOSITORY https://github.com/google/googletest.git
-#        GIT_TAG release-1.11.0
-#)
-## For Windows: Prevent overriding the parent project's compiler/linker settings
-##set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-#FetchContent_MakeAvailable(googletest)
-#
-##include_directories(${})
-
+include_directories(../../libs)
 
 #project(Tests)
 #
@@ -59,20 +57,12 @@ project(Tests)
 #FetchContent_MakeAvailable(Catch2)
 
 file(GLOB TESTS test*.cpp)
-
-#add_executable(Tests_run test_core.cpp)
-#target_link_libraries(Tests_run gtest gtest_main typescript)
+add_executable(Tests_run test_core.cpp)
+target_link_libraries(Tests_run gtest gtest_main typescript)
 
 foreach (file ${TESTS})
     get_filename_component(name ${file} NAME_WE)
     MESSAGE("Test found typescript_${name}.")
     add_executable(typescript_${name} ${file})
-
-    #    target_link_libraries(typescript_${name} PUBLIC Tracy::TracyClient)
-
-    #    target_link_libraries(typescript_${name} gtest_main)
-    target_link_libraries(typescript_${name} PRIVATE doctest typescript)
-#    target_link_libraries(typescript_${name} typescript)
-    #    target_link_libraries(typescript_${name} PRIVATE Catch2::Catch2WithMain)
-    #    target_link_libraries(typescript_${name} PRIVATE typescript)
+    target_link_libraries(typescript_${name} PRIVATE gtest gtest_main typescript)
 endforeach ()
